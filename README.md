@@ -1,12 +1,21 @@
-# Problem definition
+## Problem definition
 
 The problem is to develop a model to automatically determine topic of an unseen article. We have been provided with an unlabelled corpus of articles (from same nature of articles to be classified). 
 
-# High level explanation of approach and code description
+## High level explanation of approach and code description
 
 I have clustered train set with two clustering and topic modelling approaches and then used the models for prediction. 
 
 The main toolkits I have used are **scikit learn** and **NLTK**. NLTK have been used for tokenising, stop word removal and stemming. And scikit learn has been used for feature extraction and vectorisation.
+
+## Code description
+
+**train.py**	uses NLTK (stopwords, Snowball stemmer); Sklearn (Tfidf Vectorizer, Kmeans, NMF); Joblib (dump)	and Train set to train	K-means model; NMF model;
+Tf-iDf Vectorizer	and stores vectorizer and 2 models in joblib format for later use.
+
+**predict.py**	uses Pandas; Numpy; NLTK (stopwords, Snowball stemmer); Joblib (load)	and Test set to run model and generate an	Excel file containing 6 columns (id, Document, Model1 tag, Model1 cluster, Model2 tag, Model2 topic).	The code loads models and vectorizer joblib files and stores results including prediction from two models into the excel file.
+
+**serve.py** uses	Flask; Joblib (load)	and String from browser and predicts tag and top terms.	This is just a simple demo to serve a model and not a production solution. Run the app from terminal (go to directory and execute python serve.py) then call the app from browser on this address. (http://0.0.0.0:5000/serve/something) predicted tag and top terms will be sent back to browser and terminal 
 
 **Note:** The aim in solution was not to achieve the best results by optimising parameters and details but to quickly solution an open problem with a justifiable architecture with outline of approaches for optimising models and processes.
 
@@ -40,15 +49,5 @@ Prediction loads trained models from disk to make predictions on test set. This 
 
 At first stage, models will be loaded including Tf-iDf vectorizer, K-means centroid vectors and NMF topic vectors and transformer are loaded. Terms along with their indexes are extracted from vectorizer so that for each centroid and topic vector we could identify what terms are having the most significance. This is how we name topics. For example, one topic is “health/people/research/help/care” based on top 5 most relevant terms to the topic.
 For each document in test set, pre-processing including stemming and stop word removal are done. Each document then will be vectorized using vocabulary and inverted-document frequency learnt from train stage. 
-
-# Code description
-
-**train.py**	uses NLTK (stopwords, Snowball stemmer); Sklearn (Tfidf Vectorizer, Kmeans, NMF); Joblib (dump)	and Train set to train	K-means model; NMF model;
-Tf-iDf Vectorizer	and stores vectorizer and 2 models in joblib format for later use.
-
-**predict.py**	uses Pandas; Numpy; NLTK (stopwords, Snowball stemmer); Joblib (load)	and Test set to run model and generate an	Excel file containing 6 columns (id, Document, Model1 tag, Model1 cluster, Model2 tag, Model2 topic).	The code loads models and vectorizer joblib files and stores results including prediction from two models into the excel file.
-
-**serve.py** uses	Flask; Joblib (load)	and String from browser and predicts tag and top terms.	This is just a simple demo to serve a model and not a production solution. Run the app from terminal (go to directory and execute python serve.py) then call the app from browser on this address. (http://0.0.0.0:5000/serve/something) predicted tag and top terms will be sent back to browser and terminal 
-
 
 
